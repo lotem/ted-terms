@@ -1,0 +1,14 @@
+{
+  "name": "ted-terms",
+  "version": "1.0.0",
+  "description": "Collects term definitions from XML files, and save them to desired format.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "fredchen <chen.sst@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "iconv-lite": "^0.4.10"
+  }
+}
