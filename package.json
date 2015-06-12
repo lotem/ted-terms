@@ -9,6 +9,10 @@
   "author": "fredchen <chen.sst@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "iconv-lite": "^0.4.10"
+    "bluebird": "^2.9.27",
+    "co": "^4.5.4",
+    "iconv-lite": "^0.4.10",
+    "js-yaml": "^3.3.1",
+    "xml2js": "^0.4.9"
   }
 }
