@@ -1,1 +1,1 @@
-coffee main.coffee < data/947.txt
+node main.js < data/947.txt
