@@ -2,6 +2,7 @@ var co = require('co'),
     iconv = require('iconv-lite'),
     Promise = require('bluebird'),
     parseString = Promise.promisify(require('xml2js').parseString),
+    yaml = require('js-yaml'),
     config = require('./config');
 
 function debug(value) {
@@ -42,20 +43,31 @@ function* extractTerms(data) {
   var m = data.title[0].trim().match(/^([0-9.]+)\s*([\S]+)\s*([-' A-Za-z]*)$/);
   if (!m)
     return;
-  var term = {section: m[1], term: m[2]};
+  var term = {term: m[2]};
   if (m[3])
     term.english = m[3];
   if (data.para)
     term.definition = data.para[0].trim();
+  term.section = m[1];
   yield term;
+}
+
+function outputYaml(gen) {
+  var terms = [];
+  for (var x of gen) {
+    debug(x);
+    terms.push(x);
+  }
+  var yamlDoc = yaml.dump(terms);
+  console.log(yamlDoc);
 }
 
 co(function*() {
   checkConfig(config);
   var xmlData = yield convert(process.stdin, config);
   debug(xmlData);
-  for (x of extractTerms(xmlData))
-    debug(x);
+  var terms = extractTerms(xmlData);
+  outputYaml(terms);
 }).catch(function(e) {
   console.error('Error:', e.message);
 });
