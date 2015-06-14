@@ -6,7 +6,8 @@ var co = require('co'),
     config = require('./config');
 
 function debug(value) {
-  //console.dir(value, {colors: true, depth: null});
+  if (config.debug)
+    console.dir(value, {colors: true, depth: null});
 }
 
 function checkEncodingSupported(encoding) {
