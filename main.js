@@ -68,6 +68,9 @@ function output(gen, stream, config) {
     debug(x);
     terms.push(x);
   }
+  if (!(config.format in formatter)) {
+    return Promise.reject(new Error('unsupported format: ' + config.format));
+  }
   var doc = formatter[config.format](terms);
   var encoder = iconv.encodeStream(config.outputEncoding);
   return new Promise(function(resolve, reject) {
