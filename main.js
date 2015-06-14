@@ -5,6 +5,12 @@ var co = require('co'),
     yaml = require('js-yaml'),
     config = require('./config');
 
+var formatter = {
+  yaml: function(data) {
+    return yaml.dump(data);
+  }
+};
+
 function debug(value) {
   if (config.debug)
     console.dir(value, {colors: true, depth: null});
@@ -59,11 +65,11 @@ function output(gen, stream, config) {
     debug(x);
     terms.push(x);
   }
-  var yamlDoc = yaml.dump(terms);
+  var doc = formatter[config.format](terms);
   var encoder = iconv.encodeStream(config.outputEncoding);
   return new Promise(function(resolve, reject) {
     encoder.pipe(stream);
-    encoder.write(yamlDoc, resolve);
+    encoder.write(doc, resolve);
   });
 }
 

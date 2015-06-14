@@ -1,4 +1,5 @@
 var config = {
+  format: 'yaml',  // csv, json, yaml
   inputEncoding: 'cp936',
   outputEncoding: 'utf16',
   debug: false
