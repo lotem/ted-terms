@@ -6,7 +6,7 @@ var co = require('co'),
     config = require('./config');
 
 function debug(value) {
-  console.dir(value, {colors: true, depth: null});
+  //console.dir(value, {colors: true, depth: null});
 }
 
 function checkEncodingSupported(encoding) {
@@ -52,14 +52,18 @@ function* extractTerms(data) {
   yield term;
 }
 
-function outputYaml(gen) {
+function output(gen, stream, config) {
   var terms = [];
   for (var x of gen) {
     debug(x);
     terms.push(x);
   }
   var yamlDoc = yaml.dump(terms);
-  console.log(yamlDoc);
+  var encoder = iconv.encodeStream(config.outputEncoding);
+  return new Promise(function(resolve, reject) {
+    encoder.pipe(stream);
+    encoder.write(yamlDoc, resolve);
+  });
 }
 
 co(function*() {
@@ -67,7 +71,7 @@ co(function*() {
   var xmlData = yield convert(process.stdin, config);
   debug(xmlData);
   var terms = extractTerms(xmlData);
-  outputYaml(terms);
+  yield output(terms, process.stdout, config);
 }).catch(function(e) {
   console.error('Error:', e.message);
 });
