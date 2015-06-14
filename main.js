@@ -6,6 +6,9 @@ var co = require('co'),
     config = require('./config');
 
 var formatter = {
+  json: function(data) {
+    return JSON.stringify(data, null, 2);
+  },
   yaml: function(data) {
     return yaml.dump(data);
   }
