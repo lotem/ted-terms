@@ -1,1 +1,1 @@
-node main.js $@
+cat sample.xml | node main.js -d $@
