@@ -38,10 +38,8 @@ function checkConfig(config) {
     config.outputEncoding = argv.o;
   if (argv.f || argv.format)
     config.format = argv.f || argv.format;
-  if (config.debug) {
-    // Default encoding for Windows command line / *nix console.
-    config.outputEncoding = (process.platform == 'win32') ? 'cp936' : 'utf8';
-  }
+  if (config.debug)
+    config.outputEncoding = 'utf8';  // Default encoding for console output.
   debug(config);
   checkEncodingSupported(config.inputEncoding);
   checkEncodingSupported(config.outputEncoding);
