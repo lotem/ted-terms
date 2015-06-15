@@ -1,2 +1,1 @@
-#!/bin/bash
-cat data/947.txt | node main.js $@
+node main.js $@

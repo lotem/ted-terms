@@ -1,0 +1,30 @@
+<section>
+  <title>
+    <![CDATA[ 3　术语和定义
+    ]]>
+  </title>
+  <para>
+    <![CDATA[ GB/T 50279—1998　确立的以及下列术语和定义适用于本标准。
+    ]]>
+  </para>
+  <section>
+    <title>
+      <![CDATA[ 3.1　集线箱　terminal box
+      ]]>
+    </title>
+    <para>
+      <![CDATA[ 用于监测传感器信号通道切换的装置。
+      ]]>
+    </para>
+  </section>
+  <section>
+    <title>
+      <![CDATA[ 3.2　自动集线箱　automatic terminal box
+      ]]>
+    </title>
+    <para>
+      <![CDATA[ 用于通过接收控制装置命令自动实现传感器信号通道切换的装置。
+      ]]>
+    </para>
+  </section>
+</section>
