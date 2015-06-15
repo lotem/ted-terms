@@ -57,12 +57,13 @@ function* extractTerms(data) {
   var m = data.title[0].trim().match(/^([0-9.]+)\s*([\S]+)\s*([-' A-Za-z]*)$/);
   if (!m)
     return;
-  var term = {term: m[2]};
+  var term = {};
+  term[config.labels.term] = m[2];
   if (m[3])
-    term.english = m[3];
+    term[config.labels.english] = m[3];
   if (data.para)
-    term.definition = data.para[0].trim();
-  term.section = m[1];
+    term[config.labels.definition] = data.para[0].trim();
+  term[config.labels.section] = m[1];
   yield term;
 }
 
