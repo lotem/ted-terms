@@ -1,4 +1,5 @@
-var co = require('co'),
+var argv = require('optimist').argv,
+    co = require('co'),
     csv = require('fast-csv'),
     iconv = require('iconv-lite'),
     Promise = require('bluebird'),
@@ -19,7 +20,7 @@ var formatters = {
 };
 
 function debug(value) {
-  if (config.debug)
+  if (argv.debug || config.debug)
     console.dir(value, {colors: true, depth: null});
 }
 
@@ -29,6 +30,10 @@ function checkEncodingSupported(encoding) {
 }
 
 function checkConfig(config) {
+  if (argv.debug || config.debug) {
+    // Default encoding for Windows command line / *nix console.
+    config.outputEncoding = (process.platform == 'win32') ? 'cp936' : 'utf8';
+  }
   debug(config);
   checkEncodingSupported(config.inputEncoding);
   checkEncodingSupported(config.outputEncoding);
@@ -73,13 +78,14 @@ function output(gen, stream, config) {
     debug(x);
     terms.push(x);
   }
-  if (!(config.format in formatters)) {
-    return Promise.reject(new Error('unsupported format: ' + config.format));
+  var format = argv.format || config.format;
+  if (!(format in formatters)) {
+    return Promise.reject(new Error('unsupported format: ' + format));
   }
-  var format = formatters[config.format];
+  var formatter = formatters[format];
   var encoder = iconv.encodeStream(config.outputEncoding);
   encoder.pipe(stream);
-  return format(terms).then(function (data) {
+  return formatter(terms).then(function (data) {
     return new Promise(function(resolve, reject) {
       encoder.write(data);
       encoder.end(resolve);
@@ -90,7 +96,7 @@ function output(gen, stream, config) {
 co(function*() {
   checkConfig(config);
   var xmlData = yield convert(process.stdin, config);
-  debug(xmlData);
+  //debug(xmlData);
   var terms = extractTerms(xmlData);
   yield output(terms, process.stdout, config);
 }).catch(function(e) {
