@@ -11,6 +11,7 @@
   "dependencies": {
     "bluebird": "^2.9.27",
     "co": "^4.5.4",
+    "fast-csv": "^0.6.0",
     "iconv-lite": "^0.4.10",
     "js-yaml": "^3.3.1",
     "xml2js": "^0.4.9"

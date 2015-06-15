@@ -1,16 +1,20 @@
 var co = require('co'),
+    csv = require('fast-csv'),
     iconv = require('iconv-lite'),
     Promise = require('bluebird'),
     parseString = Promise.promisify(require('xml2js').parseString),
     yaml = require('js-yaml'),
     config = require('./config');
 
-var formatter = {
+var formatters = {
+  csv: function(data) {
+    return Promise.promisify(csv.writeToString).call(null, data, config.csvOptions);
+  },
   json: function(data) {
-    return JSON.stringify(data, null, 2);
+    return Promise.resolve(JSON.stringify(data, null, config.jsonIndentOption));
   },
   yaml: function(data) {
-    return yaml.dump(data);
+    return Promise.resolve(yaml.dump(data));
   }
 };
 
@@ -68,14 +72,17 @@ function output(gen, stream, config) {
     debug(x);
     terms.push(x);
   }
-  if (!(config.format in formatter)) {
+  if (!(config.format in formatters)) {
     return Promise.reject(new Error('unsupported format: ' + config.format));
   }
-  var doc = formatter[config.format](terms);
+  var format = formatters[config.format];
   var encoder = iconv.encodeStream(config.outputEncoding);
-  return new Promise(function(resolve, reject) {
-    encoder.pipe(stream);
-    encoder.write(doc, resolve);
+  encoder.pipe(stream);
+  return format(terms).then(function (data) {
+    return new Promise(function(resolve, reject) {
+      encoder.write(data);
+      encoder.end(resolve);
+    });
   });
 }
 

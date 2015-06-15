@@ -2,6 +2,8 @@ var config = {
   format: 'yaml',  // csv, json, yaml
   inputEncoding: 'cp936',
   outputEncoding: 'utf16',
+  csvOptions: {headers: true},
+  jsonIndentOption: 2,
   debug: false
 };
 
