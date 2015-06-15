@@ -30,7 +30,15 @@ function checkEncodingSupported(encoding) {
 }
 
 function checkConfig(config) {
-  if (argv.debug || config.debug) {
+  if (argv.d || argv.debug)
+    config.debug = true;
+  if (argv.i)
+    config.inputEncoding = argv.i;
+  if (argv.o)
+    config.outputEncoding = argv.o;
+  if (argv.f || argv.format)
+    config.format = argv.f || argv.format;
+  if (config.debug) {
     // Default encoding for Windows command line / *nix console.
     config.outputEncoding = (process.platform == 'win32') ? 'cp936' : 'utf8';
   }
@@ -78,11 +86,10 @@ function output(gen, stream, config) {
     debug(x);
     terms.push(x);
   }
-  var format = argv.format || config.format;
-  if (!(format in formatters)) {
-    return Promise.reject(new Error('unsupported format: ' + format));
+  if (!(config.format in formatters)) {
+    return Promise.reject(new Error('unsupported format: ' + config.format));
   }
-  var formatter = formatters[format];
+  var formatter = formatters[config.format];
   var encoder = iconv.encodeStream(config.outputEncoding);
   encoder.pipe(stream);
   return formatter(terms).then(function (data) {
