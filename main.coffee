@@ -67,6 +67,9 @@ foreach = (gen, fn) ->
   `for (var x of gen) { fn(x) }`
   return
 
+convertCrlf = (str) ->
+  str.replace /\n/g, '\r\n'
+
 output = (gen, stream, config) ->
   terms = []
   foreach gen, (x) ->
@@ -79,7 +82,7 @@ output = (gen, stream, config) ->
   encoder.pipe stream
   formatter(terms).then (data) ->
     new Promise (resolve, reject) ->
-      encoder.write data
+      encoder.write convertCrlf data
       encoder.end resolve
 
 co () ->
