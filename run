@@ -1,1 +1,1 @@
-cat sample.xml | coffee main.coffee -d $@
+coffee main.coffee $@ < sample.xml
