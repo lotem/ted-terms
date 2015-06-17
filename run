@@ -1,1 +1,1 @@
-cat sample.xml | node main.js -d $@
+cat sample.xml | coffee main.coffee -d $@

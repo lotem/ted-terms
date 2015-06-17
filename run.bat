@@ -1,1 +1,1 @@
-node main.js -d %* < sample.xml
+coffee main.coffee -d %* < sample.xml

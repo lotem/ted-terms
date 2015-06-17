@@ -1,0 +1,4 @@
+#!/bin/bash
+for x in *.coffee; do
+  coffee -c $x
+done
