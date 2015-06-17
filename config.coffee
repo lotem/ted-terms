@@ -3,7 +3,8 @@
 module.exports =
   format: 'yaml'  # csv, json, yaml
   inputEncoding: 'cp936'
-  outputEncoding: 'utf16'
+  outputEncoding: 'utf8'
+  terminalEncoding: 'utf8'
   labels:
     term: '术语'
     english: '英文'

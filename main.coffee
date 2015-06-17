@@ -32,7 +32,7 @@ checkConfig = (config) ->
   if argv.f or argv.format
     config.format = argv.f or argv.format
   if config.debug
-    config.outputEncoding = 'utf8'  # Default encoding for console output.
+    config.outputEncoding = config.terminalEncoding
   debug config
   checkEncodingSupported config.inputEncoding
   checkEncodingSupported config.outputEncoding
