@@ -11,6 +11,13 @@ npm install -g coffee-script
 
 ## 用法
 
+1.  双击 `shell.bat` 打开 Windows 命令行窗口。
+
+2.  输入命令 `run.bat` 检查脚本能否正确处理样例输入 `sample.xml`。
+    如转换出错或记事本内结果显示为乱码，请参考下文修改编码设定。
+
+3.  使用以下命令提取术语定义，并输出为所需格式的文本。
+
 ### 输出到文件
 
 ``` batch
@@ -19,7 +26,7 @@ node main.js < sample.xml > output.yaml
 
 假定输入文件编码为 GBK，输出文件编码为 UTF-8，终端（控制台）输出编码为 UTF-8。
 
-如果查实所用编码不同，可在 `config.js` 里面设定。
+如果查实输入文件所用编码不同，可编辑 `config.js` 修改设定。
 
 ### 指定输出格式
 
