@@ -1,30 +1,51 @@
-<section>
-  <title>
-    <![CDATA[ 3　术语和定义
-    ]]>
-  </title>
-  <para>
-    <![CDATA[ GB/T 50279—1998　确立的以及下列术语和定义适用于本标准。
-    ]]>
-  </para>
-  <section>
-    <title>
-      <![CDATA[ 3.1　集线箱　terminal box
-      ]]>
-    </title>
-    <para>
-      <![CDATA[ 用于监测传感器信号通道切换的装置。
-      ]]>
-    </para>
-  </section>
-  <section>
-    <title>
-      <![CDATA[ 3.2　自动集线箱　automatic terminal box
-      ]]>
-    </title>
-    <para>
-      <![CDATA[ 用于通过接收控制装置命令自动实现传感器信号通道切换的装置。
-      ]]>
-    </para>
-  </section>
-</section>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<book xmlns="http://docbook.org/ns/docbook" version="5.0">
+  <chapter fileref="../chapter/881_1.pdf">
+    <title><![CDATA[农村水利技术术语]]></title>
+    <section>
+      <title><![CDATA[1　范围]]></title>
+      <para><![CDATA[本标准界定了灌溉、农田排水、灌区、农田水土环境、灌溉排水建筑物、泵站工程、村镇供水排水、牧区水利和古代农田水利等有关技术术语。]]></para>
+      <para><![CDATA[本标准共13章62节1910条。主要技术内容有:一般术语、灌溉、农田排水、灌区、农田水土环境、灌溉排水建筑物、泵站工程、村镇供水排水、牧区水利、古代农田水利等。]]></para>
+      <para><![CDATA[本标准不仅适用于常规的农田水利工程规划、设计、施工、管理、人员培训与试验研究,而且适用于当前和今后日益发展与扩大应用范围的节水灌溉事业,灌区改建与技术更新,农业水资源合理调配与开发利用,农村水土环境保护与改善等农村水利,同时,也适用于涉及农村水利的其他技术工作。]]></para>
+    </section>
+    <section>
+      <title><![CDATA[3　一般术语]]></title>
+      <section>
+        <title><![CDATA[3.1　农村水利]]></title>
+        <section>
+          <title><![CDATA[3.1.1　农村水利　rural water conservancy]]></title>
+          <para><![CDATA[提高农业综合生产能力和改善农村生态环境与农民生活条件服务的水利措施。]]></para>
+        </section>
+        <section>
+          <title><![CDATA[3.1.2　农田水利　irrigation and drainage]]></title>
+          <para><![CDATA[防治旱、涝、渍和盐碱等灾害,对农田实施灌溉、排水等人工措施的总称。]]></para>
+        </section>
+      </section>
+    </section>
+    <section>
+      <title><![CDATA[4　灌溉]]></title>
+      <section>
+        <title><![CDATA[4.1　灌溉水源]]></title>
+        <section>
+          <title><![CDATA[4.1.2　灌溉蓄水工程规划]]></title>
+          <section>
+            <title><![CDATA[4.1.2.1　水利计算　analysis of irrigation water resources]]></title>
+            <para><![CDATA[在灌溉工程建设和管理中,为经济、有效地利用灌溉水资源所进行的分析计算工作。]]></para>
+          </section>
+          <section>
+            <title><![CDATA[4.1.2.2　当地地表径流　local surface runoff]]></title>
+            <para><![CDATA[灌区范围内由降水所产生的地表径流。]]></para>
+          </section>
+          <section>
+            <title><![CDATA[4.1.2.3　塘坝　pond;pool;tank]]></title>
+            <para>拦截和贮存当地地表径流、蓄水量不足10万m<superscript>3</superscript>的蓄水设施。</para>
+          </section>
+          <section>
+            <title><![CDATA[4.1.2.6　小型水库　small reservior]]></title>
+            <para>库容在10万～1000万m<superscript>3</superscript>之间的水库。其中,库容在100万～1000万m<superscript>3</superscript>为小I型水库,库容在10万～100万m<superscript>3</superscript>的为小II型水库。</para>
+          </section>
+        </section>
+      </section>
+    </section>
+  </chapter>
+</book>

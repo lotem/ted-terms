@@ -55,7 +55,12 @@ convert = (stream, config) ->
         xml = xml.replace /<superscript>(\w+)<\/superscript>/g, superscriptChars
         resolve Promise.promisify(xml2js.parseString) xml
 
-extractTerms= (data) ->
+getText = (x) -> (x._ or x).trim()
+
+getDefinition = (data) ->
+  (getText para for para in data).join '\n'
+
+extractTerms = (data) ->
   data = data.book if data.book?
   data = data.chapter if data.chapter?
   if  Array.isArray data
@@ -64,13 +69,14 @@ extractTerms= (data) ->
     return
   if data.section?
     yield from extractTerms data.section
+    return
   return unless data.title?
   m = data.title[0].trim().match /^([0-9.]+)\s*([\S]+)\s*([-' A-Za-z]*)$/
   return unless m
   term = {}
   term[config.labels.term] = m[2]
   term[config.labels.english] = m[3] if m[3]
-  term[config.labels.definition] = ((x) -> (x._ or x).trim()) data.para[0] if data.para?
+  term[config.labels.definition] = getDefinition data.para if data.para?
   term[config.labels.section] = m[1]
   yield term
 
