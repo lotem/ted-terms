@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 argv = require('optimist').argv
 co = require 'co'
 csv = require 'fast-csv'
@@ -37,6 +39,12 @@ checkConfig = (config) ->
   checkEncodingSupported config.inputEncoding
   checkEncodingSupported config.outputEncoding
 
+superscriptChars = (match, char) ->
+  switch char
+    when '2' then '²'
+    when '3' then '³'
+    else throw Error "Cannot convert superscript: #{char}"
+
 convert = (stream, config) ->
   decoder = iconv.decodeStream config.inputEncoding
   new Promise (resolve, reject) ->
@@ -44,6 +52,7 @@ convert = (stream, config) ->
       if err
         reject err
       else
+        xml = xml.replace /<superscript>(\w+)<\/superscript>/g, superscriptChars
         resolve Promise.promisify(xml2js.parseString) xml
 
 extractTerms= (data) ->
@@ -61,7 +70,7 @@ extractTerms= (data) ->
   term = {}
   term[config.labels.term] = m[2]
   term[config.labels.english] = m[3] if m[3]
-  term[config.labels.definition] = data.para[0].trim() if data.para?
+  term[config.labels.definition] = ((x) -> (x._ or x).trim()) data.para[0] if data.para?
   term[config.labels.section] = m[1]
   yield term
 
