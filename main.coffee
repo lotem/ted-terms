@@ -47,6 +47,8 @@ convert = (stream, config) ->
         resolve Promise.promisify(xml2js.parseString) xml
 
 extractTerms= (data) ->
+  data = data.book if data.book?
+  data = data.chapter if data.chapter?
   if  Array.isArray data
     for item in data
       yield from extractTerms item
