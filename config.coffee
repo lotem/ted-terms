@@ -2,7 +2,7 @@
 
 module.exports =
   format: 'yaml'  # csv, json, yaml
-  inputEncoding: 'gbk'
+  inputEncoding: 'utf8'
   outputEncoding: 'utf8'
   terminalEncoding: 'utf8'
   labels:

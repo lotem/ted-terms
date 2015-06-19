@@ -24,7 +24,7 @@ npm install -g coffee-script
 node main.js < sample.xml > output.yaml
 ```
 
-假定输入文件编码为 GBK，输出文件编码为 UTF-8，终端（控制台）输出编码为 UTF-8。
+假定输入文件编码为 UTF-8，输出文件编码为 UTF-8，终端（控制台）输出编码为 UTF-8。
 
 如果查实输入文件所用编码不同，可编辑 `config.js` 修改设定。
 
