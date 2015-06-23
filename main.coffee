@@ -75,8 +75,8 @@ extractTerms = (data) ->
   return unless m
   term = {}
   term[config.labels.term] = m[2]
-  term[config.labels.english] = m[3] if m[3]
-  term[config.labels.definition] = getDefinition data.para if data.para?
+  term[config.labels.english] = m[3] or ''
+  term[config.labels.definition] = getDefinition(data.para or {})
   term[config.labels.section] = m[1]
   yield term
 
