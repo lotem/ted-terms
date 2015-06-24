@@ -39,11 +39,13 @@ checkConfig = (config) ->
   checkEncodingSupported config.inputEncoding
   checkEncodingSupported config.outputEncoding
 
-superscriptChars = (match, char) ->
-  switch char
-    when '2' then '²'
-    when '3' then '³'
-    else throw Error "Cannot convert superscript: #{char}"
+quote = (prefix) ->
+  (match, text) -> "#{prefix}{#{text}}"
+
+transformTags = (tags, xml) ->
+  for tag, prefix of tags
+    xml = xml.replace new RegExp("<#{tag}>(.+?)</#{tag}>", 'g'), quote prefix
+  xml
 
 convert = (stream, config) ->
   decoder = iconv.decodeStream config.inputEncoding
@@ -52,8 +54,7 @@ convert = (stream, config) ->
       if err
         reject err
       else
-        xml = xml.replace /<superscript>(\w+)<\/superscript>/g, superscriptChars
-        resolve Promise.promisify(xml2js.parseString) xml
+        resolve Promise.promisify(xml2js.parseString) transformTags config.formattingTags, xml
 
 getText = (x) -> (x._ or x).trim()
 
@@ -71,7 +72,7 @@ extractTerms = (data) ->
     yield from extractTerms data.section
     return
   return unless data.title?
-  m = data.title[0].trim().match /^([0-9.]+)\s*([\S]+)\s*([-' A-Za-z]*)$/
+  m = getText(data.title[0]).match /^([0-9.]+)\s*([\S]+)\s*([-' A-Za-z]*)$/
   return unless m
   term = {}
   term[config.labels.term] = m[2]
