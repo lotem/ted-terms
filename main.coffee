@@ -5,7 +5,6 @@ co = require 'co'
 csv = require 'fast-csv'
 iconv = require 'iconv-lite'
 Promise = require 'bluebird'
-xml2js = require 'xml2js'
 yaml = require 'js-yaml'
 config = require './config'
 
@@ -39,13 +38,48 @@ checkConfig = (config) ->
   checkEncodingSupported config.inputEncoding
   checkEncodingSupported config.outputEncoding
 
-quote = (prefix) ->
-  (match, text) -> "#{prefix}{#{text}}"
+Array::last = -> @[@length - 1]
 
-transformTags = (tags, xml) ->
-  for tag, prefix of tags
-    xml = xml.replace new RegExp("<#{tag}>(.+?)</#{tag}>", 'g'), quote prefix
-  xml
+parseTitle = (text) ->
+  m = text.match /([0-9]+[.0-9]*)\u3000(.+)$/
+  return null unless m?
+  s = m[2].split '\u3000'
+  {
+    "#{config.labels.term}": s[i]
+    "#{config.labels.english}": s[i + 1] or ''
+    "#{config.labels.definition}": ''
+    "#{config.labels.section}": m[1]
+  } for i in [0...s.length] by 2
+
+parseContent = (context, content) ->
+  text = content.trim().replace /<!\[CDATA\[|\]\]>/g, ''
+  return unless text
+  switch context.tagStack.last()
+    when 'title'
+      context.recentTerms = parseTitle text
+    when 'para'
+      if context.recentTag is 'title' and context.recentTerms?
+        terms = context.recentTerms
+        for term in terms
+          term[config.labels.definition] = text
+        Array::push.apply context.result, terms
+        context.recentTerms = null
+
+parse = (doc) ->
+  context =
+    result: []
+    tagStack: []
+    recentTerms: null
+    recentTag: null
+  for line in doc.split /\r\n|\n/
+    opening = line.match /^\s*<(\w+)( [^>]*)?>/
+    closing = line.match /<(\/?)(\w+)>\s*$/
+    context.tagStack.push opening[1] if opening
+    contentBegin = if opening then opening.index + opening[0].length else 0
+    contentEnd = if closing then closing.index else line.length
+    parseContent context, line.slice contentBegin, contentEnd
+    context.recentTag = context.tagStack.pop() if closing
+  context.result.filter (term) -> term[config.labels.definition]
 
 convert = (stream, config) ->
   decoder = iconv.decodeStream config.inputEncoding
@@ -54,45 +88,12 @@ convert = (stream, config) ->
       if err
         reject err
       else
-        resolve Promise.promisify(xml2js.parseString) transformTags config.formattingTags, xml
-
-getText = (x) -> (x._ or x).trim()
-
-getDefinition = (data) ->
-  (getText para for para in data).join '\n'
-
-extractTerms = (data) ->
-  data = data.book if data.book?
-  data = data.chapter if data.chapter?
-  if  Array.isArray data
-    for item in data
-      yield from extractTerms item
-    return
-  if data.section?
-    yield from extractTerms data.section
-    return
-  return unless data.title?
-  m = getText(data.title[0]).match /^([0-9.]+)\s*([\S]+)\s*([-' A-Za-z]*)$/
-  return unless m
-  term = {}
-  term[config.labels.term] = m[2]
-  term[config.labels.english] = m[3] or ''
-  term[config.labels.definition] = getDefinition(data.para or {})
-  term[config.labels.section] = m[1]
-  yield term
-
-foreach = (gen, fn) ->
-  `for (var x of gen) { fn(x) }`
-  return
+        resolve parse xml
 
 convertCrlf = (str) ->
   str.replace /\n/g, '\r\n'
 
-output = (gen, stream, config) ->
-  terms = []
-  foreach gen, (x) ->
-    debug x
-    terms.push x
+output = (terms, stream, config) ->
   unless config.format of formatters
     return Promise.reject new Error "unsupported format: #{config.format}"
   formatter = formatters[config.format]
@@ -105,9 +106,8 @@ output = (gen, stream, config) ->
 
 co () ->
   checkConfig config
-  xmlData = yield convert process.stdin, config
-  #debug xmlData
-  terms = extractTerms xmlData
+  terms = yield convert process.stdin, config
+  debug terms
   yield output terms, process.stdout, config
 .catch (e) ->
   console.error "Error: #{e.message}"
